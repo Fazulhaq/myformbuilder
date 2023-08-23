@@ -17,7 +17,7 @@ public class EmptyForm {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "empty_form_id")
-    private Long emptyFormId;
+    private Long id;
 
     @NonNull
     @Column(name = "form_title", nullable = false)
@@ -25,7 +25,7 @@ public class EmptyForm {
 
     @NonNull
     @Column(name = "json_text", nullable = false)
-    private String JSONText;
+    private String jsonText;
 
     @NonNull
     @Column(name = "publish_date", nullable = false)

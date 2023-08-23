@@ -7,12 +7,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.time.LocalDate;
+
 @AllArgsConstructor
 @SpringBootApplication
 public class MyformbuilderApplication implements CommandLineRunner {
 
 	UserDataRepository userDataRepository;
-
 	public static void main(String[] args) {
 		SpringApplication.run(MyformbuilderApplication.class, args);
 	}
@@ -21,8 +23,7 @@ public class MyformbuilderApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		UserData[] userData = new UserData[]{
 				new UserData("Ahmad","Rahimi","ahmad@gmail.com","12345", UserType.ADMIN,"finance ministry"),
-				new UserData("Akbar","jan","akbar@gmail.com","12345", UserType.USER,"moi"),
-				new UserData("Mahmood","akbari","mahmood@gmail.com","12345", UserType.USER,"finance ministry")
+				new UserData("Mohammad","Osmani","mohammad@gmail.com","12345", UserType.USER,"telecommunication ministry")
 		};
 		for (int i =0; i< userData.length; i++){
 			userDataRepository.save(userData[i]);

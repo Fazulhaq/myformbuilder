@@ -13,9 +13,9 @@ import java.util.Optional;
 @Service
 public class UserDataService {
     UserDataRepository userDataRepository;
-    public UserData getUserData(Long userId) {
-        Optional<UserData> userData = userDataRepository.findById(userId);
-        return unwrapUserData(userData, userId);
+    public UserData getUserData(Long userid) {
+        Optional<UserData> userData = userDataRepository.findById(userid);
+        return unwrapUserData(userData, userid);
     }
 
     public List<UserData> getAllUserData() {
@@ -26,21 +26,21 @@ public class UserDataService {
         return userDataRepository.save(userData);
     }
 
-    public UserData updateUserData(UserData userData, Long userId){
-        Optional<UserData> userData1 = userDataRepository.findById(userId);
-        unwrapUserData(userData1, userId);
+    public UserData updateUserData(UserData userData, Long userid){
+        Optional<UserData> userData1 = userDataRepository.findById(userid);
+        unwrapUserData(userData1, userid);
         return userDataRepository.save(userData);
     }
 
-    public void deleteUserData(Long userId){
-        Optional<UserData> userData = userDataRepository.findById(userId);
-        unwrapUserData(userData, userId);
-        userDataRepository.deleteById(userId);
+    public void deleteUserData(Long userid){
+        Optional<UserData> userData = userDataRepository.findById(userid);
+        unwrapUserData(userData, userid);
+        userDataRepository.deleteById(userid);
     }
 
-    static UserData unwrapUserData(Optional<UserData> entity, Long userId){
+    static UserData unwrapUserData(Optional<UserData> entity, Long userid){
         if (entity.isPresent()) return entity.get();
-        else throw new UserNotFoundException(userId);
+        else throw new UserNotFoundException(userid);
     }
 
 

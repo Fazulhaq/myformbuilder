@@ -16,9 +16,9 @@ import java.util.Optional;
 public class UserDataController {
     UserDataService userDataService;
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserData> getUserData(@PathVariable Long userId){
-        return new ResponseEntity<>(userDataService.getUserData(userId), HttpStatus.OK);
+    @GetMapping("/{userid}")
+    public ResponseEntity<UserData> getUserData(@PathVariable Long userid){
+        return new ResponseEntity<>(userDataService.getUserData(userid), HttpStatus.OK);
     }
 
     @GetMapping("/all")
@@ -31,14 +31,14 @@ public class UserDataController {
         return new ResponseEntity<>(userDataService.saveUserData(userData), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{userId}")
-    public ResponseEntity<UserData> updateUserData(@RequestBody UserData userData, @PathVariable Long userId){
-        return new ResponseEntity<>(userDataService.updateUserData(userData, userId), HttpStatus.OK);
+    @PutMapping("/{userid}")
+    public ResponseEntity<UserData> updateUserData(@RequestBody UserData userData, @PathVariable Long userid){
+        return new ResponseEntity<>(userDataService.updateUserData(userData, userid), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<HttpStatus> deleteUserData(@PathVariable Long userId){
-        userDataService.deleteUserData(userId);
+    @DeleteMapping("/{userid}")
+    public ResponseEntity<HttpStatus> deleteUserData(@PathVariable Long userid){
+        userDataService.deleteUserData(userid);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

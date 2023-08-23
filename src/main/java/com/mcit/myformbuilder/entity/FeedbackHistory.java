@@ -15,7 +15,7 @@ public class FeedbackHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "feedback_id")
-    private Long feedbackId;
+    private Long id;
 
     @NonNull
     @Column(name = "feedback_text", nullable = false)
