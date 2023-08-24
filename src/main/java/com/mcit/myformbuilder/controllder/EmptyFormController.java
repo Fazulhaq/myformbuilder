@@ -31,9 +31,9 @@ public class EmptyFormController {
         return new ResponseEntity<>(emptyFormService.saveEmptyForm(emptyform, userid), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{emptyformid}/userdata/{userid}")
-    public ResponseEntity<EmptyForm> updateEmptyForm(@RequestBody EmptyForm emptyForm, @PathVariable Long emptyformid, @PathVariable Long userid){
-        return new ResponseEntity<>(emptyFormService.updateEmptyForm(emptyForm, emptyformid, userid), HttpStatus.OK);
+    @PutMapping("/{emptyformid}")
+    public ResponseEntity<EmptyForm> updateEmptyForm(@RequestBody EmptyForm emptyForm, @PathVariable Long emptyformid){
+        return new ResponseEntity<>(emptyFormService.updateEmptyForm(emptyForm, emptyformid), HttpStatus.OK);
     }
 
     @DeleteMapping("/{emptyformid}")

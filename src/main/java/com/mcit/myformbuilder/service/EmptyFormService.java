@@ -33,8 +33,8 @@ public class EmptyFormService {
         return emptyFormRepository.save(emptyForm);
     }
 
-    public EmptyForm updateEmptyForm(EmptyForm newEmptyForm, Long emptyFormId, Long userId){
-        Optional<EmptyForm> emptyForm = emptyFormRepository.findEmptyFormByIdAndUserDataId(emptyFormId, userId);
+    public EmptyForm updateEmptyForm(EmptyForm newEmptyForm, Long emptyFormId){
+        Optional<EmptyForm> emptyForm = emptyFormRepository.findById(emptyFormId);
         EmptyForm unwrappedEmptyForm = unwrappedEmptyForm(emptyForm, emptyFormId);
         unwrappedEmptyForm.setFormTitle(newEmptyForm.getFormTitle());
         unwrappedEmptyForm.setJsonText(newEmptyForm.getJsonText());
