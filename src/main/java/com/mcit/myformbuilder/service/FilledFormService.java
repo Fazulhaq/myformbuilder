@@ -62,7 +62,7 @@ public class FilledFormService {
         return filledFormRepository.findFilledFormByEmptyFormId(emptyFormId);
     }
 
-    public FilledForm testedFilledForm(Optional<FilledForm> filledForm, Long formId){
+     static FilledForm testedFilledForm(Optional<FilledForm> filledForm, Long formId){
         if (filledForm.isPresent()) return filledForm.get();
         else throw new FilledFormNotFoundException(formId);
     }
