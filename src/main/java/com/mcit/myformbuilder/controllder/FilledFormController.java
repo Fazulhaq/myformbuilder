@@ -1,10 +1,13 @@
 package com.mcit.myformbuilder.controllder;
 
+import com.mcit.myformbuilder.entity.Constants;
 import com.mcit.myformbuilder.entity.FilledForm;
 import com.mcit.myformbuilder.service.FilledFormService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +22,11 @@ public class FilledFormController {
 
     @GetMapping("/{filledformid}")
     public ResponseEntity<FilledForm> getFilledForm(@PathVariable Long filledformid){
-        return new ResponseEntity<>(filledFormService.getFilledForm(filledformid), HttpStatus.OK);
+        if (filledFormService.ifFounded(filledformid) == Constants.Not_Found){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }else {
+            return new ResponseEntity<>(filledFormService.getFilledForm(filledformid), HttpStatus.OK);
+        }
     }
 
     @GetMapping("/all")
@@ -28,13 +35,21 @@ public class FilledFormController {
     }
 
     @PostMapping("/userdata/{userid}/emptyform/{emptyformid}")
-    public ResponseEntity<FilledForm> saveFilledForm(@RequestBody FilledForm filledForm, @PathVariable Long userid, @PathVariable Long emptyformid){
-        return new ResponseEntity<>(filledFormService.saveFilledForm(filledForm, userid, emptyformid), HttpStatus.CREATED);
+    public ResponseEntity<FilledForm> saveFilledForm(@Valid @RequestBody FilledForm filledForm, BindingResult result, @PathVariable Long userid, @PathVariable Long emptyformid){
+        if (result.hasErrors()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else {
+            return new ResponseEntity<>(filledFormService.saveFilledForm(filledForm, userid, emptyformid), HttpStatus.CREATED);
+        }
     }
 
     @PutMapping("/{filledformid}")
-    public ResponseEntity<FilledForm> updateFilledForm(@RequestBody FilledForm filledForm, @PathVariable Long filledformid){
-        return new ResponseEntity<>(filledFormService.updateFilledForm(filledForm, filledformid), HttpStatus.OK);
+    public ResponseEntity<FilledForm> updateFilledForm(@Valid @RequestBody FilledForm filledForm, BindingResult result, @PathVariable Long filledformid){
+        if (result.hasErrors()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else {
+            return new ResponseEntity<>(filledFormService.updateFilledForm(filledForm, filledformid), HttpStatus.OK);
+        }
     }
 
     @DeleteMapping("/{filledformid}")

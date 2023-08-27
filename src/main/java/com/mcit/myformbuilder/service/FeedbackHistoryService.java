@@ -1,5 +1,6 @@
 package com.mcit.myformbuilder.service;
 
+import com.mcit.myformbuilder.entity.Constants;
 import com.mcit.myformbuilder.entity.FeedbackHistory;
 import com.mcit.myformbuilder.entity.FilledForm;
 import com.mcit.myformbuilder.entity.UserData;
@@ -71,5 +72,13 @@ public class FeedbackHistoryService {
     static FeedbackHistory foundFeedback(Optional<FeedbackHistory> entity, Long feedbackId){
         if (entity.isPresent()) return entity.get();
         else throw new FeedbackHistoryNotFoundException(feedbackId);
+    }
+
+    public Long ifFounded(Long id){
+        for(Long l = 1L; l<getFeedbacks().size()+1; l++){
+            if(getFeedback(l).getId().equals(id))
+                return l;
+        }
+        return Constants.Not_Found;
     }
 }

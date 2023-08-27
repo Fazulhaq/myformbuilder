@@ -1,5 +1,6 @@
 package com.mcit.myformbuilder.service;
 
+import com.mcit.myformbuilder.entity.Constants;
 import com.mcit.myformbuilder.entity.EmptyForm;
 import com.mcit.myformbuilder.entity.FilledForm;
 import com.mcit.myformbuilder.entity.UserData;
@@ -65,5 +66,13 @@ public class FilledFormService {
      static FilledForm testedFilledForm(Optional<FilledForm> filledForm, Long formId){
         if (filledForm.isPresent()) return filledForm.get();
         else throw new FilledFormNotFoundException(formId);
+    }
+
+    public Long ifFounded(Long id){
+        for(Long l = 1L; l<getFilledForms().size()+1; l++){
+            if(getFilledForm(l).getId().equals(id))
+                return l;
+        }
+        return Constants.Not_Found;
     }
 }

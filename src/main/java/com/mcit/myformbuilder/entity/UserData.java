@@ -2,6 +2,8 @@ package com.mcit.myformbuilder.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.Set;
@@ -10,7 +12,6 @@ import java.util.Set;
 @Table(name = "user_data")
 @Setter
 @Getter
-@RequiredArgsConstructor
 @NoArgsConstructor
 public class UserData {
     @Id
@@ -18,28 +19,28 @@ public class UserData {
     @Column(name = "user_id")
     private Long id;
 
-    @NonNull
+    @NotBlank(message = "First Name should not be null")
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @NonNull
+    @NotBlank(message = "Last Name should not be null")
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @NonNull
+    @NotBlank(message = "Email should not be null")
     @Column(name = "email", nullable = false)
     private String email;
 
-    @NonNull
+    @NotBlank(message = "Password should not be null")
     @Column(name = "password", nullable = false)
     private String password;
 
-    @NonNull
+    @NotNull(message = "User type should not be null")
     @Column(name = "user_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
-    @NonNull
+    @NotBlank(message = "Organization should not be null")
     @Column(name = "organization", nullable = false)
     private String organization;
 
@@ -54,4 +55,14 @@ public class UserData {
     @JsonIgnore
     @OneToMany(mappedBy = "userData", cascade = CascadeType.ALL)
     private Set<FeedbackHistory> feedbackHistories;
+
+    public UserData(String firstName, String lastName, String email, String password, UserType userType, String organization) {
+        this.id = this.getId();
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.userType = userType;
+        this.organization = organization;
+    }
 }

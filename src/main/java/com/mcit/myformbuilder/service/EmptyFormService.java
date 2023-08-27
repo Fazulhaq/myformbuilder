@@ -1,5 +1,6 @@
 package com.mcit.myformbuilder.service;
 
+import com.mcit.myformbuilder.entity.Constants;
 import com.mcit.myformbuilder.entity.EmptyForm;
 import com.mcit.myformbuilder.entity.UserData;
 import com.mcit.myformbuilder.exception.EmptyFormNotFoundException;
@@ -55,5 +56,13 @@ public class EmptyFormService {
     static EmptyForm unwrappedEmptyForm(Optional<EmptyForm> entity, Long emptyFormId){
         if (entity.isPresent()) return entity.get();
         else throw new EmptyFormNotFoundException(emptyFormId);
+    }
+
+    public Long ifFounded(Long id){
+        for(Long l = 1L; l<getAllEmptyForm().size()+1; l++){
+            if(getEmptyForm(l).getId().equals(id))
+                return l;
+        }
+        return Constants.Not_Found;
     }
 }

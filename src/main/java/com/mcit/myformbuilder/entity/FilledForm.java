@@ -2,7 +2,11 @@ package com.mcit.myformbuilder.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -11,7 +15,6 @@ import java.util.Set;
 @Table(name = "filled_form")
 @Setter
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 public class FilledForm {
     @Id
@@ -19,19 +22,20 @@ public class FilledForm {
     @Column(name = "filled_form_id")
     private Long id;
 
-    @NonNull
+    @NotBlank(message = "Form title should not be null")
     @Column(name = "form_title")
     private String formTitle;
 
-    @NonNull
+    @NotBlank(message = "JSON text should not be null")
     @Column(name = "json_text", nullable = false)
     private String jsonText;
 
-    @NonNull
+    @Past(message = "Filling date of form must be in the past!")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "filled_date", nullable = false)
     private LocalDate filledDate;
 
-    @NonNull
+    @NotNull(message = "Status of form should not be null")
     @Column(name = "form_status")
     @Enumerated(EnumType.STRING)
     private FormStatus formStatus;
@@ -50,4 +54,13 @@ public class FilledForm {
     @OneToMany(mappedBy = "filledForm", cascade = CascadeType.ALL)
     private Set<FeedbackHistory> feedbackHistories;
 
+    public FilledForm(String formTitle, String jsonText, LocalDate filledDate, FormStatus formStatus, UserData userData, EmptyForm emptyForm) {
+        this.id = this.getId();
+        this.formTitle = formTitle;
+        this.jsonText = jsonText;
+        this.filledDate = filledDate;
+        this.formStatus = formStatus;
+        this.userData = userData;
+        this.emptyForm = emptyForm;
+    }
 }

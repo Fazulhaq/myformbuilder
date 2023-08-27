@@ -1,10 +1,13 @@
 package com.mcit.myformbuilder.controllder;
 
+import com.mcit.myformbuilder.entity.Constants;
 import com.mcit.myformbuilder.entity.FeedbackHistory;
 import com.mcit.myformbuilder.service.FeedbackHistoryService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +22,11 @@ public class FeedbackHistoryController {
 
     @GetMapping("/{feedbackid}")
     public ResponseEntity<FeedbackHistory> getFeeback(@PathVariable Long feedbackid){
-        return new ResponseEntity<>(feedbackHistoryService.getFeedback(feedbackid), HttpStatus.OK);
+        if (feedbackHistoryService.ifFounded(feedbackid) == Constants.Not_Found){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }else {
+            return new ResponseEntity<>(feedbackHistoryService.getFeedback(feedbackid), HttpStatus.OK);
+        }
     }
 
     @GetMapping("/all")
@@ -28,13 +35,21 @@ public class FeedbackHistoryController {
     }
 
     @PostMapping("/user/{userid}/filledform/{formid}")
-    public ResponseEntity<FeedbackHistory> saveFeedback(@RequestBody FeedbackHistory feedback, @PathVariable Long userid, @PathVariable Long formid){
-        return new ResponseEntity<>(feedbackHistoryService.saveFeedback(feedback, userid, formid), HttpStatus.CREATED);
+    public ResponseEntity<FeedbackHistory> saveFeedback(@Valid @RequestBody FeedbackHistory feedback, BindingResult result, @PathVariable Long userid, @PathVariable Long formid){
+        if (result.hasErrors()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else {
+            return new ResponseEntity<>(feedbackHistoryService.saveFeedback(feedback, userid, formid), HttpStatus.CREATED);
+        }
     }
 
     @PutMapping("/{feedbackid}")
-    public ResponseEntity<FeedbackHistory> updateFeedback(@RequestBody FeedbackHistory feedback, @PathVariable Long feedbackid){
-        return new ResponseEntity<>(feedbackHistoryService.updateFeedback(feedback, feedbackid), HttpStatus.OK);
+    public ResponseEntity<FeedbackHistory> updateFeedback(@Valid @RequestBody FeedbackHistory feedback, BindingResult result, @PathVariable Long feedbackid){
+        if (result.hasErrors()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else {
+            return new ResponseEntity<>(feedbackHistoryService.updateFeedback(feedback, feedbackid), HttpStatus.OK);
+        }
     }
 
     @DeleteMapping("/{feedbackid}")

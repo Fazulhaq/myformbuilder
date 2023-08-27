@@ -1,5 +1,6 @@
 package com.mcit.myformbuilder.service;
 
+import com.mcit.myformbuilder.entity.Constants;
 import com.mcit.myformbuilder.entity.UserData;
 import com.mcit.myformbuilder.exception.UserNotFoundException;
 import com.mcit.myformbuilder.repository.UserDataRepository;
@@ -44,4 +45,11 @@ public class UserDataService {
     }
 
 
+    public Long ifFounded(Long id){
+        for(Long l = 1L; l<getAllUserData().size()+1; l++){
+            if(getUserData(l).getId().equals(id))
+                return l;
+        }
+        return Constants.Not_Found;
+    }
 }
