@@ -2,6 +2,7 @@ package com.mcit.myformbuilder.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -27,6 +28,7 @@ public class UserData {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
+    @Email
     @NotBlank(message = "Email should not be null")
     @Column(name = "email", nullable = false)
     private String email;
