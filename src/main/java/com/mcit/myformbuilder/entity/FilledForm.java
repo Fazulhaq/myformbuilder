@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -30,7 +31,7 @@ public class FilledForm {
     @Column(name = "json_text", nullable = false)
     private String jsonText;
 
-    @Past(message = "Filling date of form must be in the past!")
+    @PastOrPresent(message = "Filling date of form must be in the past or present!")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "filled_date", nullable = false)
     private LocalDate filledDate;
