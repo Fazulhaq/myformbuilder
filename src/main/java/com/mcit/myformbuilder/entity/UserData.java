@@ -28,7 +28,7 @@ public class UserData {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Email
+    @Email(message = "Enter a valid email address")
     @NotBlank(message = "Email should not be null")
     @Column(name = "email", nullable = false)
     private String email;
