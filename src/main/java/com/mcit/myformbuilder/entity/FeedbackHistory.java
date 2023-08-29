@@ -1,9 +1,8 @@
 package com.mcit.myformbuilder.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -29,12 +28,10 @@ public class FeedbackHistory {
     @Column(name = "feedback_date", nullable = false)
     private LocalDate feedbackDate;
 
-    @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private UserData userData;
 
-    @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(name = "filled_form_id", referencedColumnName = "filled_form_id")
     private FilledForm filledForm;

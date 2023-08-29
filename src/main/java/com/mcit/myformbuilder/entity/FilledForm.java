@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -41,12 +40,10 @@ public class FilledForm {
     @Enumerated(EnumType.STRING)
     private FormStatus formStatus;
 
-    @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private UserData userData;
 
-    @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(name = "empty_form_id", referencedColumnName = "empty_form_id")
     private EmptyForm emptyForm;
