@@ -31,8 +31,8 @@ public class UserDataController {
             @ApiResponse(responseCode = "200", description = "Successful retrieval of user data", content = @Content(array = @ArraySchema(schema = @Schema(implementation = UserData.class))))
     })
     @GetMapping(value = "/{userid}",  produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserData> getUserData(@PathVariable Long userid){
-        return new ResponseEntity<>(userDataService.getUserData(userid), HttpStatus.OK);
+    public ResponseEntity<String> getUserData(@PathVariable Long userid){
+        return new ResponseEntity<>(userDataService.getUserData(userid).getEmail(), HttpStatus.OK);
     }
 
     @Operation(summary = "Get list of all users", description = "Call this endpoint and it will return all the existing users in the database even they are admins or consumers")

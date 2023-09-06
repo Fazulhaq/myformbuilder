@@ -4,6 +4,7 @@ import com.mcit.myformbuilder.entity.UserData;
 import com.mcit.myformbuilder.exception.EntityNotFoundException;
 import com.mcit.myformbuilder.repository.UserDataRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.Optional;
 @Service
 public class UserDataService {
     UserDataRepository userDataRepository;
+    BCryptPasswordEncoder bCryptPasswordEncoder;
     public UserData getUserData(Long userid) {
         Optional<UserData> userData = userDataRepository.findById(userid);
         return unwrapUserData(userData, userid);
@@ -23,6 +25,7 @@ public class UserDataService {
     }
 
     public UserData saveUserData(UserData userData){
+        userData.setPassword(bCryptPasswordEncoder.encode(userData.getPassword()));
         return userDataRepository.save(userData);
     }
 
@@ -32,7 +35,7 @@ public class UserDataService {
         userData2.setFirstName(userData.getFirstName());
         userData2.setLastName(userData.getLastName());
         userData2.setEmail(userData.getEmail());
-        userData2.setPassword(userData.getPassword());
+        userData2.setPassword(bCryptPasswordEncoder.encode(userData.getPassword()));
         userData2.setUserType(userData.getUserType());
         userData2.setOrganization(userData.getOrganization());
         return userDataRepository.save(userData2);

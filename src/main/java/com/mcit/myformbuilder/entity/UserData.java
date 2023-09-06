@@ -30,10 +30,12 @@ public class UserData {
 
     @Email(message = "Enter a valid email address")
     @NotBlank(message = "Email should not be null")
+    @NotNull
     @Column(name = "email", nullable = false)
     private String email;
 
     @NotBlank(message = "Password should not be null")
+    @NotNull
     @Column(name = "password", nullable = false)
     private String password;
 
