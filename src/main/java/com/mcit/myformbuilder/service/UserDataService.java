@@ -24,6 +24,11 @@ public class UserDataService {
         return (List<UserData>) userDataRepository.findAll();
     }
 
+    public UserData findUserByEmail(String email){
+        Optional<UserData> userData = userDataRepository.findByEmail(email);
+        return unwrapUserData(userData, 404L);
+    }
+
     public UserData saveUserData(UserData userData){
         userData.setPassword(bCryptPasswordEncoder.encode(userData.getPassword()));
         return userDataRepository.save(userData);

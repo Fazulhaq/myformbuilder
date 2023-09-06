@@ -11,14 +11,19 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @AllArgsConstructor
 public class SecurityConfig {
+    CustomAuthenticationManager customAuthenticationManager;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter(customAuthenticationManager);
+        authenticationFilter.setFilterProcessesUrl("/authenticate");
         http
                 .csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.POST, SecurityConstants.REGISTER_PATH).permitAll()
                 .anyRequest().authenticated()
                 .and()
+                .addFilterBefore(new ExceptionHandlerFilter(), AuthenticationFilter.class)
+                .addFilter(authenticationFilter)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return http.build();
     }
