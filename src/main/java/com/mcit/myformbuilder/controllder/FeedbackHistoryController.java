@@ -1,7 +1,5 @@
 package com.mcit.myformbuilder.controllder;
 
-import com.mcit.myformbuilder.entity.Constants;
-import com.mcit.myformbuilder.entity.EmptyForm;
 import com.mcit.myformbuilder.entity.FeedbackHistory;
 import com.mcit.myformbuilder.service.FeedbackHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,7 +14,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,11 +34,7 @@ public class FeedbackHistoryController {
     })
     @GetMapping(value = "/{feedbackid}",  produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<FeedbackHistory> getFeeback(@PathVariable Long feedbackid){
-        if (feedbackHistoryService.ifFounded(feedbackid) == Constants.Not_Found){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }else {
-            return new ResponseEntity<>(feedbackHistoryService.getFeedback(feedbackid), HttpStatus.OK);
-        }
+        return new ResponseEntity<>(feedbackHistoryService.getFeedback(feedbackid), HttpStatus.OK);
     }
 
     @Operation(summary = "Get All Feedback List", description = "You can call this endpoint and get the complete list of feedbacks")
@@ -60,13 +53,9 @@ public class FeedbackHistoryController {
             @ApiResponse(responseCode = "400", description = "Unsuccessful operation on adding feedback", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Exception.class))))
     })
     @PostMapping("/user/{userid}/filledform/{formid}")
-    public ResponseEntity<HttpStatus> saveFeedback(@Valid @RequestBody FeedbackHistory feedback, BindingResult result, @PathVariable Long userid, @PathVariable Long formid){
-        if (result.hasErrors()){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }else {
-            feedbackHistoryService.saveFeedback(feedback, userid, formid);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        }
+    public ResponseEntity<HttpStatus> saveFeedback(@Valid @RequestBody FeedbackHistory feedback, @PathVariable Long userid, @PathVariable Long formid){
+        feedbackHistoryService.saveFeedback(feedback, userid, formid);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Operation(summary = "Update the Feedback", description = "You can pass the FeedbackId and edited feedback data in JSON format and it updates it accordingly")
@@ -75,12 +64,8 @@ public class FeedbackHistoryController {
             @ApiResponse(responseCode = "400", description = "Unsuccessful operation on updating feedback", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Exception.class))))
     })
     @PutMapping(value = "/{feedbackid}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<FeedbackHistory> updateFeedback(@Valid @RequestBody FeedbackHistory feedback, BindingResult result, @PathVariable Long feedbackid){
-        if (result.hasErrors()){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }else {
-            return new ResponseEntity<>(feedbackHistoryService.updateFeedback(feedback, feedbackid), HttpStatus.OK);
-        }
+    public ResponseEntity<FeedbackHistory> updateFeedback(@Valid @RequestBody FeedbackHistory feedback, @PathVariable Long feedbackid){
+        return new ResponseEntity<>(feedbackHistoryService.updateFeedback(feedback, feedbackid), HttpStatus.OK);
     }
 
     @Operation(summary = "Delete Feedback by Id", description = "You can pass the FeedbackId and it will remove it from database")
@@ -103,7 +88,6 @@ public class FeedbackHistoryController {
     public ResponseEntity<Set<FeedbackHistory>> getFilledFormFeedbacks(@PathVariable Long formid){
         return new ResponseEntity<>(feedbackHistoryService.getFormFeedbacks(formid), HttpStatus.OK);
     }
-
     @Operation(summary = "Get list of feedbacks for specific form and user", description = "Pass the FormId and UserId and it returns the related feedbacks")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful retrieval of feedback data"),

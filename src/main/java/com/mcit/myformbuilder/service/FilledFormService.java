@@ -1,10 +1,11 @@
 package com.mcit.myformbuilder.service;
 
-import com.mcit.myformbuilder.entity.Constants;
 import com.mcit.myformbuilder.entity.EmptyForm;
 import com.mcit.myformbuilder.entity.FilledForm;
 import com.mcit.myformbuilder.entity.UserData;
-import com.mcit.myformbuilder.exception.FilledFormNotFoundException;
+import com.mcit.myformbuilder.exception.EmptyFilledFormNotFoundException;
+import com.mcit.myformbuilder.exception.EntityNotFoundException;
+import com.mcit.myformbuilder.exception.UserFilledFormNotFoundException;
 import com.mcit.myformbuilder.repository.EmptyFormRepository;
 import com.mcit.myformbuilder.repository.FilledFormRepository;
 import com.mcit.myformbuilder.repository.UserDataRepository;
@@ -56,23 +57,23 @@ public class FilledFormService {
     }
 
     public Set<FilledForm> getUserFilledForms(Long userId){
-        return filledFormRepository.findFilledFormByUserDataId(userId);
+        Optional<UserData> userData = userDataRepository.findById(userId);
+        UserDataService.unwrapUserData(userData, userId);
+        Set<FilledForm> filledForms = filledFormRepository.findFilledFormByUserDataId(userId);
+        if (filledForms.isEmpty()) throw new UserFilledFormNotFoundException(userId);
+        return filledForms;
     }
 
     public Set<FilledForm> getEmptyFormUsedFilledForms(Long emptyFormId){
-        return filledFormRepository.findFilledFormByEmptyFormId(emptyFormId);
+        Optional<EmptyForm> emptyForm = emptyFormRepository.findById(emptyFormId);
+        EmptyFormService.unwrappedEmptyForm(emptyForm, emptyFormId);
+        Set<FilledForm> filledForms = filledFormRepository.findFilledFormByEmptyFormId(emptyFormId);
+        if (filledForms.isEmpty()) throw new EmptyFilledFormNotFoundException(emptyFormId);
+        return filledForms;
     }
 
      static FilledForm testedFilledForm(Optional<FilledForm> filledForm, Long formId){
         if (filledForm.isPresent()) return filledForm.get();
-        else throw new FilledFormNotFoundException(formId);
-    }
-
-    public Long ifFounded(Long id){
-        for(Long l = 1L; l<getFilledForms().size()+1; l++){
-            if(getFilledForm(l).getId().equals(id))
-                return l;
-        }
-        return Constants.Not_Found;
+        else throw new EntityNotFoundException(formId, FilledForm.class);
     }
 }

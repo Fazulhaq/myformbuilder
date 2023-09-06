@@ -1,7 +1,5 @@
 package com.mcit.myformbuilder.controllder;
 
-import com.mcit.myformbuilder.entity.Constants;
-import com.mcit.myformbuilder.entity.EmptyForm;
 import com.mcit.myformbuilder.entity.FilledForm;
 import com.mcit.myformbuilder.service.FilledFormService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,7 +14,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,11 +34,7 @@ public class FilledFormController {
     })
     @GetMapping(value = "/{filledformid}",  produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<FilledForm> getFilledForm(@PathVariable Long filledformid){
-        if (filledFormService.ifFounded(filledformid) == Constants.Not_Found){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }else {
-            return new ResponseEntity<>(filledFormService.getFilledForm(filledformid), HttpStatus.OK);
-        }
+        return new ResponseEntity<>(filledFormService.getFilledForm(filledformid), HttpStatus.OK);
     }
 
     @Operation(summary = "Get list of filled forms", description = "Call this endpoint and it will return all filled or used forms of client users")
@@ -60,13 +53,9 @@ public class FilledFormController {
             @ApiResponse(responseCode = "400", description = "Unsuccessful operation on adding filled form", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Exception.class))))
     })
     @PostMapping("/userdata/{userid}/emptyform/{emptyformid}")
-    public ResponseEntity<HttpStatus> saveFilledForm(@Valid @RequestBody FilledForm filledForm, BindingResult result, @PathVariable Long userid, @PathVariable Long emptyformid){
-        if (result.hasErrors()){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }else {
-            filledFormService.saveFilledForm(filledForm, userid, emptyformid);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        }
+    public ResponseEntity<HttpStatus> saveFilledForm(@Valid @RequestBody FilledForm filledForm, @PathVariable Long userid, @PathVariable Long emptyformid){
+        filledFormService.saveFilledForm(filledForm, userid, emptyformid);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Operation(summary = "Update the filled form by id", description = "Pass the edited data of filled form in Json format and related form id to this endpoint and it will update it into database")
@@ -75,12 +64,8 @@ public class FilledFormController {
             @ApiResponse(responseCode = "400", description = "Unsuccessful operation on updating filled form", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Exception.class))))
     })
     @PutMapping(value = "/{filledformid}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<FilledForm> updateFilledForm(@Valid @RequestBody FilledForm filledForm, BindingResult result, @PathVariable Long filledformid){
-        if (result.hasErrors()){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }else {
-            return new ResponseEntity<>(filledFormService.updateFilledForm(filledForm, filledformid), HttpStatus.OK);
-        }
+    public ResponseEntity<FilledForm> updateFilledForm(@Valid @RequestBody FilledForm filledForm, @PathVariable Long filledformid){
+        return new ResponseEntity<>(filledFormService.updateFilledForm(filledForm, filledformid), HttpStatus.OK);
     }
 
     @Operation(summary = "Delete filled form by id", description = "Pass the id of filled form to this endpoint and it will deleted from database")
@@ -103,7 +88,6 @@ public class FilledFormController {
     public ResponseEntity<Set<FilledForm>> getUserFilledForms(@PathVariable Long userid){
         return new ResponseEntity<>(filledFormService.getUserFilledForms(userid), HttpStatus.OK);
     }
-
     @Operation(summary = "Get list of filled forms for one empty form by empty form id", description = "Pass the id of empty form into this endpoint and it will return list of filled forms of this kind of empty form, means how many times empty form had been used or filled by clients")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful retrieval of filled form data"),

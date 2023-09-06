@@ -1,10 +1,11 @@
 package com.mcit.myformbuilder.service;
 
-import com.mcit.myformbuilder.entity.Constants;
 import com.mcit.myformbuilder.entity.FeedbackHistory;
 import com.mcit.myformbuilder.entity.FilledForm;
 import com.mcit.myformbuilder.entity.UserData;
-import com.mcit.myformbuilder.exception.FeedbackHistoryNotFoundException;
+import com.mcit.myformbuilder.exception.EntityNotFoundException;
+import com.mcit.myformbuilder.exception.FeedbackNotFoundException;
+import com.mcit.myformbuilder.exception.FormFeedbackNotFoundException;
 import com.mcit.myformbuilder.repository.FeedbackRepository;
 import com.mcit.myformbuilder.repository.FilledFormRepository;
 import com.mcit.myformbuilder.repository.UserDataRepository;
@@ -12,7 +13,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.LongSummaryStatistics;
 import java.util.Optional;
 import java.util.Set;
 
@@ -58,7 +58,9 @@ public class FeedbackHistoryService {
     public Set<FeedbackHistory> getFormFeedbacks(Long formId) {
         Optional<FilledForm> filledForm = filledFormRepository.findById(formId);
         FilledFormService.testedFilledForm(filledForm, formId);
-        return feedbackRepository.findByFilledFormId(formId);
+        Set<FeedbackHistory> feedbacks = feedbackRepository.findByFilledFormId(formId);
+        if (feedbacks.isEmpty()) throw new FormFeedbackNotFoundException(formId);
+        return feedbacks;
     }
 
     public Set<FeedbackHistory> getFeedbacksByFormAndUser(Long formId, Long userId) {
@@ -66,19 +68,13 @@ public class FeedbackHistoryService {
         Optional<UserData> userData = userDataRepository.findById(userId);
         FilledFormService.testedFilledForm(filledForm, formId);
         UserDataService.unwrapUserData(userData, userId);
-        return feedbackRepository.findByFilledFormIdAndUserDataId(formId, userId);
+        Set<FeedbackHistory> feedbacks = feedbackRepository.findByFilledFormIdAndUserDataId(formId, userId);
+        if (feedbacks.isEmpty()) throw new FeedbackNotFoundException(formId, userId);
+        return feedbacks;
     }
 
     static FeedbackHistory foundFeedback(Optional<FeedbackHistory> entity, Long feedbackId){
         if (entity.isPresent()) return entity.get();
-        else throw new FeedbackHistoryNotFoundException(feedbackId);
-    }
-
-    public Long ifFounded(Long id){
-        for(Long l = 1L; l<getFeedbacks().size()+1; l++){
-            if(getFeedback(l).getId().equals(id))
-                return l;
-        }
-        return Constants.Not_Found;
+        else throw new EntityNotFoundException(feedbackId, FeedbackHistory.class);
     }
 }

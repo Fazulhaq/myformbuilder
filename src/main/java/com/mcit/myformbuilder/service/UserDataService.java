@@ -1,8 +1,7 @@
 package com.mcit.myformbuilder.service;
 
-import com.mcit.myformbuilder.entity.Constants;
 import com.mcit.myformbuilder.entity.UserData;
-import com.mcit.myformbuilder.exception.UserNotFoundException;
+import com.mcit.myformbuilder.exception.EntityNotFoundException;
 import com.mcit.myformbuilder.repository.UserDataRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,8 +28,14 @@ public class UserDataService {
 
     public UserData updateUserData(UserData userData, Long userid){
         Optional<UserData> userData1 = userDataRepository.findById(userid);
-        unwrapUserData(userData1, userid);
-        return userDataRepository.save(userData);
+        UserData userData2 = unwrapUserData(userData1, userid);
+        userData2.setFirstName(userData.getFirstName());
+        userData2.setLastName(userData.getLastName());
+        userData2.setEmail(userData.getEmail());
+        userData2.setPassword(userData.getPassword());
+        userData2.setUserType(userData.getUserType());
+        userData2.setOrganization(userData.getOrganization());
+        return userDataRepository.save(userData2);
     }
 
     public void deleteUserData(Long userid){
@@ -41,15 +46,6 @@ public class UserDataService {
 
     static UserData unwrapUserData(Optional<UserData> entity, Long userid){
         if (entity.isPresent()) return entity.get();
-        else throw new UserNotFoundException(userid);
-    }
-
-
-    public Long ifFounded(Long id){
-        for(Long l = 1L; l<getAllUserData().size()+1; l++){
-            if(getUserData(l).getId().equals(id))
-                return l;
-        }
-        return Constants.Not_Found;
+        else throw new EntityNotFoundException(userid, UserData.class);
     }
 }

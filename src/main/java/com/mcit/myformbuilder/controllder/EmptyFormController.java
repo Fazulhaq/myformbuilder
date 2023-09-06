@@ -1,6 +1,5 @@
 package com.mcit.myformbuilder.controllder;
 
-import com.mcit.myformbuilder.entity.Constants;
 import com.mcit.myformbuilder.entity.EmptyForm;
 import com.mcit.myformbuilder.service.EmptyFormService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,7 +14,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,11 +33,7 @@ public class EmptyFormController {
     })
     @GetMapping(value = "/{emptyformid}",  produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EmptyForm> getEmptyForm(@PathVariable Long emptyformid){
-        if (emptyFormService.ifFounded(emptyformid) == Constants.Not_Found){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }else {
-            return new ResponseEntity<>(emptyFormService.getEmptyForm(emptyformid), HttpStatus.OK);
-        }
+        return new ResponseEntity<>(emptyFormService.getEmptyForm(emptyformid), HttpStatus.OK);
     }
 
     @Operation(summary = "Get all empty forms", description = "This endpoint returns the complete list of empty forms")
@@ -58,13 +52,9 @@ public class EmptyFormController {
             @ApiResponse(responseCode = "400", description = "Unsuccessful operation on adding empty form", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Exception.class))))
     })
     @PostMapping("/userdata/{userid}")
-    public ResponseEntity<HttpStatus> saveEmptyForm(@Valid @RequestBody EmptyForm emptyform, BindingResult result, @PathVariable Long userid){
-        if (result.hasErrors()){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }else {
-            emptyFormService.saveEmptyForm(emptyform, userid);
-            return new ResponseEntity<>(HttpStatus.CREATED);
-        }
+    public ResponseEntity<HttpStatus> saveEmptyForm(@Valid @RequestBody EmptyForm emptyform, @PathVariable Long userid){
+        emptyFormService.saveEmptyForm(emptyform, userid);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Operation(summary = "Update empty form by empty form id", description = "Pass empty form id and the edited or redesigned empty form as Json format and it will updated into database")
@@ -73,12 +63,8 @@ public class EmptyFormController {
             @ApiResponse(responseCode = "400", description = "Unsuccessful operation on updating empty form", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Exception.class))))
     })
     @PutMapping(value = "/{emptyformid}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EmptyForm> updateEmptyForm(@Valid @RequestBody EmptyForm emptyForm, BindingResult result, @PathVariable Long emptyformid){
-        if (result.hasErrors()){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }else {
-            return new ResponseEntity<>(emptyFormService.updateEmptyForm(emptyForm, emptyformid), HttpStatus.OK);
-        }
+    public ResponseEntity<EmptyForm> updateEmptyForm(@Valid @RequestBody EmptyForm emptyForm, @PathVariable Long emptyformid){
+        return new ResponseEntity<>(emptyFormService.updateEmptyForm(emptyForm, emptyformid), HttpStatus.OK);
     }
 
     @Operation(summary = "Delete empty form by id", description = "Pass the empty form id and it will remove it from database")
