@@ -1,5 +1,6 @@
 package com.mcit.myformbuilder.security;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.mcit.myformbuilder.exception.EntityNotFoundException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,7 +17,14 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
 
-        }catch (EntityNotFoundException e){
+        }catch (JWTVerificationException e){
+
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write("Jwt is not valid!");
+            response.getWriter().flush();
+
+        }
+        catch (EntityNotFoundException e){
 
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             response.getWriter().write("Email does not exist!");
